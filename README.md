@@ -6,4 +6,4 @@ License: ​// License: Proprietary. Unauthorized copying or use is strictly pro
 // 许可：专有协议。未经授权严禁复制或使用。
 
 Designer: Independent Chip Architect
-ChipFoundry Project: CI2609
+

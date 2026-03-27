@@ -1,5 +1,5 @@
 // ============================================================
-// anomaly_fsm — V3.0
+// anomaly_fsm —SiliconForge Security SoC V3.0
 // ============================================================
 module anomaly_fsm (
     input  wire        clk, rst_n,

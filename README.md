@@ -217,6 +217,8 @@ See [LICENSE](LICENSE) for full terms.
 You are free to use, modify, and distribute this design.
 **Attribution is required** per Section 4(d) of the license.
 
+
+
 ---
 
 ## Contact & Collaboration
@@ -228,3 +230,6 @@ For licensing inquiries, commercial collaboration, or technical discussion:
 ---
 
 *Designed with determination. Built on open silicon. Verified on a phone.*
+
+Independent Chip Architect
+毛广辉(GuanghuiMao)

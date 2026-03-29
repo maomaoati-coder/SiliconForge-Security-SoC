@@ -1,36 +1,6 @@
 # SiliconForge Security SoC (硅锻-安全-SoC) V3.0
 
-[
-
-![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)
-
-](LICENSE)
-[
-
-![Simulator](https://img.shields.io/badge/Simulator-Icarus%20Verilog%2012.0-green.svg)
-
-](https://iverilog.icarus.com/)
-[
-
-![Process](https://img.shields.io/badge/Process-SKY130%20PDK-orange.svg)
-
-](https://github.com/google/skywater-pdk)
-[
-
-![Tapeout](https://img.shields.io/badge/Tapeout-ChipFoundry%20CI2609-red.svg)
-
-](https://platform.chipfoundry.io/)
-[
-
-![Tests](https://img.shields.io/badge/Tests-61%20cases%20%7C%20100%25%20core%20pass-brightgreen.svg)
-
-]()
-[
-
-![DOI](https://zenodo.org/badge/doi/10.5281/zenodo.19303075.svg)
-
-](https://doi.org/10.5281/zenodo.19303075)
-
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE) [![Simulator](https://img.shields.io/badge/Simulator-Icarus%20Verilog%2012.0-green.svg)](https://iverilog.icarus.com/) [![Process](https://img.shields.io/badge/Process-SKY130%20PDK-orange.svg)](https://github.com/google/skywater-pdk) [![Platform](https://img.shields.io/badge/Tapeout-ChipFoundry%20CI2609-red.svg)](https://platform.chipfoundry.io/) [![Tests](https://img.shields.io/badge/Tests-61%20cases%20%7C%20100%25%20core%20pass-brightgreen.svg)]() [![DOI](https://zenodo.org/badge/doi/10.5281/zenodo.19303075.svg)](https://doi.org/10.5281/zenodo.19303075)
 
 > **A fully verified, open-source hardware security SoC designed by an independent chip architect,
 > targeting Fabless tapeout on the SKY130 open-source process.**
@@ -133,10 +103,8 @@ SiliconForge-Security-SoC/
 │   ├── tb_bio_hash_top.v
 │   └── tb_security_soc_top.v
 ├── docs/
-│   ├── Pre-Tapeout_Report_ZH.pdf
-│   ├── Pre-Tapeout_Report_EN.pdf
-│   ├── Technical_Paper_ZH.pdf
-│   └── Technical_Paper_EN.pdf
+│   ├── Technical_Paper_ZH.html
+│   └── Technical_Paper_EN.html
 ├── LICENSE
 └── README.md
 ```
@@ -219,6 +187,8 @@ Based on RO-PUF, Anomaly-Detection FSM, and ARX Hash Engine"**
 
 Available in both Chinese (中文) and English versions.
 
+**DOI: [10.5281/zenodo.19303075](https://doi.org/10.5281/zenodo.19303075)**
+
 ---
 
 ## Attribution
@@ -243,19 +213,14 @@ See [LICENSE](LICENSE) for full terms.
 You are free to use, modify, and distribute this design.
 **Attribution is required** per Section 4(d) of the license.
 
-
-
 ---
 
 ## Contact & Collaboration
 
 For licensing inquiries, commercial collaboration, or technical discussion:
-- GitHub: [@maomaoati-coder](https://github.com/maomaoati-coder)
+- GitHub:(https://github.com/maomaoati-coder/SiliconForge-Security-SoC)
 - Open an Issue or Discussion in this repository
 
 ---
 
 *Designed with determination. Built on open silicon. Verified on a phone.*
-
-Independent Chip Architect
-毛广辉(GuanghuiMao)

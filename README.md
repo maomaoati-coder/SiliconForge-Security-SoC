@@ -1,16 +1,35 @@
 # SiliconForge Security SoC (硅锻-安全-SoC) V3.0
 
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
-[![Simulator](https://img.shields.io/badge/Simulator-Icarus%20Verilog%2012.0-green.svg)](https://iverilog.icarus.com/)
-[![Process](https://img.shields.io/badge/Process-SKY130%20PDK-orange.svg)](https://github.com/google/skywater-pdk)
-[![Platform](https://img.shields.io/badge/Tapeout-ChipFoundry%20CI2609-red.svg)](https://platform.chipfoundry.io/)
-[![Tests](https://img.shields.io/badge/Tests-61%20cases%20%7C%20100%25%20core%20pass-brightgreen.svg)]()
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
-[![Simulator](https://img.shields.io/badge/Simulator-Icarus%20Verilog%2012.0-green.svg)](https://iverilog.icarus.com/)
-[![Process](https://img.shields.io/badge/Process-SKY130%20PDK-orange.svg)](https://github.com/google/skywater-pdk)
-[![Tapeout](https://img.shields.io/badge/Tapeout-ChipFoundry%20CI2609-red.svg)](https://platform.chipfoundry.io/)
-[![Tests](https://img.shields.io/badge/Tests-61%20cases%20%7C%20100%25%20core%20pass-brightgreen.svg)]()
-[![DOI](https://zenodo.org/badge/doi/10.5281/zenodo.19303075.svg)](https://doi.org/10.5281/zenodo.19303075)
+[
+
+![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)
+
+](LICENSE)
+[
+
+![Simulator](https://img.shields.io/badge/Simulator-Icarus%20Verilog%2012.0-green.svg)
+
+](https://iverilog.icarus.com/)
+[
+
+![Process](https://img.shields.io/badge/Process-SKY130%20PDK-orange.svg)
+
+](https://github.com/google/skywater-pdk)
+[
+
+![Tapeout](https://img.shields.io/badge/Tapeout-ChipFoundry%20CI2609-red.svg)
+
+](https://platform.chipfoundry.io/)
+[
+
+![Tests](https://img.shields.io/badge/Tests-61%20cases%20%7C%20100%25%20core%20pass-brightgreen.svg)
+
+]()
+[
+
+![DOI](https://zenodo.org/badge/doi/10.5281/zenodo.19303075.svg)
+
+](https://doi.org/10.5281/zenodo.19303075)
 
 
 > **A fully verified, open-source hardware security SoC designed by an independent chip architect,

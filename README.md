@@ -218,7 +218,7 @@ You are free to use, modify, and distribute this design.
 ## Contact & Collaboration
 
 For licensing inquiries, commercial collaboration, or technical discussion:
-- GitHub:(https://github.com/maomaoati-coder/SiliconForge-Security-SoC)
+- GitHub:[@maomaoati-coder](https://github.com/maomaoati-coder)
 - Open an Issue or Discussion in this repository
 
 ---

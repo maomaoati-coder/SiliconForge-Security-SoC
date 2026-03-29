@@ -5,6 +5,19 @@
 [![Process](https://img.shields.io/badge/Process-SKY130%20PDK-orange.svg)](https://github.com/google/skywater-pdk)
 [![Platform](https://img.shields.io/badge/Tapeout-ChipFoundry%20CI2609-red.svg)](https://platform.chipfoundry.io/)
 [![Tests](https://img.shields.io/badge/Tests-61%20cases%20%7C%20100%25%20core%20pass-brightgreen.svg)]()
+[
+
+![License](...)
+
+]() [
+
+![Simulator](...)
+
+]() ... [
+
+![DOI](https://zenodo.org/badge/doi/10.5281/zenodo.19303075.svg)
+
+](https://doi.org/10.5281/zenodo.19303075)
 
 > **A fully verified, open-source hardware security SoC designed by an independent chip architect,
 > targeting Fabless tapeout on the SKY130 open-source process.**

@@ -1,0 +1,90 @@
+module security_soc_top (
+    input  wire        clk,
+    input  wire        rst_n,
+    input  wire        sys_start,
+    input  wire [31:0] instr,
+    input  wire        instr_valid,
+    input  wire [7:0]  privilege_lvl,
+    output wire        instr_allow,
+    output wire        alert,
+    output wire        hard_lock,
+    output wire        system_ready
+);
+
+    reg [1:0] boot_state;
+    reg       puf_done;
+    reg       auth_ok;
+
+    localparam IDLE  = 2'd0,
+               PUF   = 2'd1,
+               HASH  = 2'd2,
+               READY = 2'd3;
+
+    assign system_ready = (boot_state == READY);
+
+    // Boot FSM
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin
+            boot_state <= IDLE;
+            puf_done   <= 1'b0;
+            auth_ok    <= 1'b0;
+        end else begin
+            case (boot_state)
+                IDLE:  if (sys_start) boot_state <= PUF;
+                       else           boot_state <= IDLE;
+
+                PUF:   if (puf_done)  boot_state <= HASH;
+                       else           boot_state <= PUF;
+
+                HASH:  if (auth_ok)   boot_state <= READY;
+                       else           boot_state <= HASH;
+
+                READY:                boot_state <= READY;
+
+                default:              boot_state <= IDLE;
+            endcase
+        end
+    end
+
+    // 异常检测
+    wire [7:0] opcode = instr[31:24];
+
+    wire is_anomaly = instr_valid &&
+                      system_ready &&
+                      (
+                          (opcode == 8'h7F && privilege_lvl > 8'h01) ||
+                          (opcode == 8'hA5) ||
+                          (opcode == 8'hFF)
+                      );
+
+    reg [7:0] threat;
+    reg       locked;
+
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin
+            threat <= 8'd0;
+            locked <= 1'b0;
+        end else begin
+            // Threat accumulation
+            if (is_anomaly)
+                threat <= (threat + 8'd50 > 8'hFF) ? 8'hFF : threat + 8'd50;
+            else if (threat > 0)
+                threat <= threat - 8'd1;
+            else
+                threat <= 8'd0;
+
+            // Lock threshold
+            if (threat >= 8'd200)
+                locked <= 1'b1;
+            else if (!rst_n)
+                locked <= 1'b0;
+            else
+                locked <= locked;
+        end
+    end
+
+    assign instr_allow = system_ready && !is_anomaly && !locked;
+    assign alert       = is_anomaly;
+    assign hard_lock   = locked;
+
+endmodule

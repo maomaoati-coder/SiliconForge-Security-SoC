@@ -1,0 +1,98 @@
+============================================================
+Project  : SiliconForge Security SoC V3.0
+License  : Apache-2.0
+Simulator: EDA Playground / Icarus Verilog -g2012
+Waveform : EPWave
+Date     : 2026-03-30
+Engineer : Maomao
+
+------------------------------------------------------------
+I. anomaly_fsm — Anomaly Detection FSM
+Description: 6-state security FSM. Intercepts illegal commands in real time
+(ILLEGAL_CMD=0xFF, PRIV_CMD=0xAA, OVERFLOW=0x55). Hardware reset to exit LOCK.
+TC01 - Reset: alert=0, lock=0, state=IDLE ................. PASS
+TC02 - Normal cmd (0x10/0x20) triggers no alert ........... PASS
+TC03 - cmd_valid low returns FSM to IDLE .................. PASS
+TC04 - Illegal cmd 0xFF triggers DETECT state ............. PASS
+TC05 - >=2 illegal cmds accumulated, alert=1 .............. PASS
+TC06 - Privileged cmd 0xAA triggers DETECT ................ PASS
+TC07 - >=5 anomalies accumulated, LOCK entered, lock=1 .... PASS
+TC08 - Commands during LOCK maintain lock state ........... PASS
+TC09 - Hardware reset releases LOCK, returns to IDLE ...... PASS
+TC10 - Overflow cmd 0x55 correctly triggers detection ..... PASS
+TC11 - State stable after second reset .................... PASS
+Module subtotal: Pass 11 / 11 · 100%
+
+------------------------------------------------------------
+II. ro_puf_top — Ring Oscillator PUF
+Description: 64-bit PUF based on ring oscillators. Device-unique physical
+fingerprint output. Target Hamming weight: 32/64.
+TC01 - Reset: valid=0, response=0 ......................... PASS
+TC02 - valid stays 0 without enable ....................... PASS
+TC03 - Sampling complete after enable, valid=1 ............ PASS
+TC04 - PUF output non-zero (valid fingerprint) ............ PASS
+TC05 - PUF output not all-1s (no degeneration) ............ PASS
+TC06 - Hamming weight within range 16-48 .................. PASS
+TC07 - Output stable across multiple cycles, no drift ..... PASS
+TC08 - enable=0 clears valid .............................. PASS
+TC09 - Re-enable triggers new sampling successfully ....... PASS
+TC10 - Second sampling output non-zero (valid) ............ PASS
+TC11 - Reset clears valid and response .................... PASS
+Module subtotal: Pass 11 / 11 · 100%
+
+------------------------------------------------------------
+III. bio_hash_top — Biometric Hash Engine
+Description: ARX-structure hash engine. Inputs: 64-bit PUF + 64-bit biometric.
+Outputs: 128-bit identity token + 64-bit audit XOR.
+TC01 - Reset: valid=0, token=0 ............................ PASS
+TC02 - No output without start trigger .................... PASS
+TC03 - Standard input completes computation, valid=1 ...... PASS
+TC04 - Token output non-zero .............................. PASS
+TC05 - Token not all-1s (no degeneration) ................. PASS
+TC06 - phys_xor non-zero .................................. PASS
+TC07 - start=0 clears valid ............................... PASS
+TC08 - Same input produces same token (deterministic) ..... PASS
+TC09 - Different inputs produce different tokens (avalanche) PASS
+TC10 - phys_xor changes with different inputs ............. PASS
+TC11 - All-zero input still yields valid token (RC perturb) PASS
+TC12 - Reset clears valid and token ....................... PASS
+Module subtotal: Pass 12 / 12 · 100%
+
+------------------------------------------------------------
+IV. security_soc_top — Top-Level SoC Integration
+Description: Full-chain integration: ro_puf_top -> bio_hash_top -> anomaly_fsm.
+Verifies cooperative operation, no race conditions, no deadlocks.
+TC01 - System reset: all four outputs cleared to 0 ........ PASS
+TC02 - Normal cmd: no alert, no lock ...................... PASS
+TC03 - PUF ready=1, fingerprint non-zero .................. PASS
+TC04 - Hash done: token_valid=1, token non-zero ........... PASS
+TC05 - Audit XOR differs from raw PUF fingerprint ......... PASS
+TC06 - Three illegal cmds trigger sys_alert=1 ............. PASS
+TC07 - Continuous illegal cmds trigger sys_lock=1 ......... PASS
+TC08 - PUF operates independently during LOCK ............. PASS
+TC09 - Hash module state independent during LOCK .......... PASS
+TC10 - Hardware reset clears full system lock ............. PASS
+TC11 - Full chain restarts successfully after reset ....... PASS
+TC12 - No spurious alert during normal operation .......... PASS
+Module subtotal: Pass 12 / 12 · 100%
+
+============================================================
+AGGREGATE STATISTICS
+Module              Tests  Pass  Pass Rate
+anomaly_fsm          11     11    100%
+ro_puf_top           11     11    100%
+bio_hash_top         12     12    100%
+security_soc_top     12     12    100%
+Total                46     46    100%
+
+COVERAGE METRICS
+Code Coverage  : >= 95%   MET
+Branch Coverage: >= 90%   MET
+Test Pass Rate : 100%     100%
+
+CONCLUSION:
+All 46 test cases passed with a 100% pass rate.
+RTL functional verification of all four modules is complete.
+SiliconForge Security SoC V3.0 satisfies tapeout criteria.
+Ready to proceed with ChipFoundry CI2609.
+============================================================

@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SiliconForge V3.0 Simulation Verification Report</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;700&family=IBM+Plex+Mono:wght@400;600&display=swap');
+  :root {
+    --bg: #f5f4f0;
+    --card: #ffffff;
+    --border: #d4cfc4;
+    --accent: #1a1a2e;
+    --accent2: #c8102e;
+    --pass: #1a6e3c;
+    --pass-bg: #eaf6ef;
+    --text: #1a1a2e;
+    --muted: #6b6560;
+    --mono: 'IBM Plex Mono', monospace;
+    --sans: 'IBM Plex Sans', sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 13px;
+    line-height: 1.6;
+    padding: 24px 16px 60px;
+  }
+  .header {
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid var(--accent);
+  }
+  .header .badge {
+    display: inline-block;
+    background: var(--accent2);
+    color: #fff;
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    padding: 3px 8px;
+    border-radius: 2px;
+    margin-bottom: 8px;
+  }
+  .header h1 {
+    font-family: var(--mono);
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--accent);
+    letter-spacing: 0.5px;
+    line-height: 1.3;
+  }
+  .header p { color: var(--muted); font-size: 11px; margin-top: 4px; }
+
+  .copy-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    background: var(--accent);
+    color: #fff;
+    font-family: var(--mono);
+    font-weight: 600;
+    font-size: 13px;
+    border: none;
+    border-radius: 4px;
+    padding: 12px 20px;
+    cursor: pointer;
+    margin-bottom: 24px;
+    transition: all 0.2s;
+  }
+  .copy-btn:active { transform: scale(0.98); opacity: 0.9; }
+  .copy-btn.copied { background: var(--pass); }
+
+  .meta-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    margin-bottom: 24px;
+  }
+  .meta-item {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 8px 10px;
+  }
+  .meta-item .k { color: var(--muted); font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .meta-item .v { color: var(--accent); font-family: var(--mono); font-size: 11px; font-weight: 600; margin-top: 2px; }
+
+  .section { margin-bottom: 24px; }
+  .section-title {
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--accent);
+    background: var(--accent);
+    color: #fff;
+    padding: 6px 12px;
+    border-radius: 4px 4px 0 0;
+    letter-spacing: 0.3px;
+  }
+  .desc {
+    color: var(--muted);
+    font-size: 11px;
+    padding: 8px 12px;
+    background: #faf9f7;
+    border: 1px solid var(--border);
+    border-top: none;
+    border-bottom: none;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+    border: 1px solid var(--border);
+    border-radius: 0 0 4px 4px;
+    overflow: hidden;
+    margin-bottom: 0;
+  }
+  th {
+    background: #f0ede8;
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 600;
+    padding: 7px 10px;
+    text-align: left;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid var(--border);
+  }
+  td {
+    padding: 7px 10px;
+    border-bottom: 1px solid #ede9e3;
+    vertical-align: top;
+  }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: #faf9f7; }
+  .tc { font-family: var(--mono); color: var(--accent2); font-size: 11px; font-weight: 600; white-space: nowrap; }
+  .pass-tag {
+    color: var(--pass);
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .summary-row td {
+    background: #eaf6ef;
+    color: var(--pass);
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 600;
+    border-top: 1px solid #c3e6d0;
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    margin-bottom: 24px;
+  }
+  .stat-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 14px 12px;
+    text-align: center;
+  }
+  .stat-card .num {
+    font-family: var(--mono);
+    font-size: 30px;
+    font-weight: 700;
+    color: var(--pass);
+    line-height: 1;
+  }
+  .stat-card .num.zero { color: #1a6e3c; }
+  .stat-card .label { color: var(--muted); font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 4px; }
+
+  .agg-table td:first-child { color: var(--muted); font-family: var(--mono); font-size: 11px; }
+  .agg-table td:nth-child(2), .agg-table td:nth-child(3) { font-family: var(--mono); font-size: 11px; }
+  .agg-table td:nth-child(4) { color: var(--pass); font-family: var(--mono); font-size: 11px; font-weight: 600; }
+
+  .conclusion {
+    background: var(--pass-bg);
+    border: 1px solid #c3e6d0;
+    border-left: 4px solid var(--pass);
+    border-radius: 4px;
+    padding: 16px;
+  }
+  .conclusion .title {
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--pass);
+    margin-bottom: 8px;
+  }
+  .conclusion p { color: #155a30; font-size: 12px; line-height: 1.8; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="badge">VERIFICATION REPORT</div>
+  <h1>SILICONFORGE SECURITY SOC V3.0<br>Simulation Functional Verification Report</h1>
+  <p>Icarus Verilog -g2012 · EDA Playground · EPWave</p>
+</div>
+
+<button class="copy-btn" onclick="copyReport(this)">
+  📋 Copy Full Report to Clipboard
+</button>
+
+<div class="meta-grid">
+  <div class="meta-item"><div class="k">Project</div><div class="v">SiliconForge V3.0</div></div>
+  <div class="meta-item"><div class="k">License</div><div class="v">Apache-2.0</div></div>
+  <div class="meta-item"><div class="k">Simulator</div><div class="v">Icarus Verilog</div></div>
+  <div class="meta-item"><div class="k">Date</div><div class="v">2026-03-30</div></div>
+  <div class="meta-item"><div class="k">Waveform</div><div class="v">EPWave</div></div>
+  <div class="meta-item"><div class="k">Engineer</div><div class="v">Maomao</div></div>
+</div>
+
+<!-- Module 1 -->
+<div class="section">
+  <div class="section-title">I. anomaly_fsm — Anomaly Detection FSM</div>
+  <div class="desc">6-state security FSM. Intercepts illegal commands in real time (ILLEGAL_CMD=0xFF, PRIV_CMD=0xAA, OVERFLOW=0x55). Hardware reset required to exit LOCK.</div>
+  <table>
+    <tr><th>ID</th><th>Test Item</th><th>Expected</th><th>Result</th></tr>
+    <tr><td class="tc">TC01</td><td>Reset: alert=0, lock=0, state=IDLE</td><td class="pass-tag">PASS</td><td class="pass-tag">✅ PASS</td></tr>
+    <tr><td class="tc">TC02</td><td>Normal cmd (0x10/0x20) triggers no alert</td><td class="pass-tag">PASS</td><td class="pass-tag">✅ PASS</td></tr>
+    <tr><td class="tc">TC03</td><td>cmd_valid low returns FSM to IDLE</td><td class="pass-tag">PASS</td><td class="pass-tag">✅ PASS</td></tr>
+    <tr><td class="tc">TC04</td><td>Illegal cmd 0xFF triggers DETECT state</td><td class="pass-tag">PASS</td><td class="pass-tag">✅ PASS</td></tr>
+    <tr><td class="tc">TC05</td><td>≥2 illegal cmds accumulated, alert=1</td><td class="pass-tag">PASS</td><td class="pass-tag">✅ PASS</td></tr>
+    <tr><td class="tc">TC06</td><td>Privileged cmd 0xAA triggers DETECT</td><td class="pass-tag">PASS</td><td class="pass-tag">✅ PASS</td></tr>
+    <tr><td class="tc">TC07</td><td>≥5 anomalies accumulated, LOCK entered, lock=1</td><td class="pass-tag">PASS</td><td class="pass-tag">✅ PASS</td></tr>
+    <tr><td class="tc">TC08</td><td>Commands during LOCK maintain lock state</td><td class="pass-tag">PASS</td><td class="pass-tag">✅ PASS</td></tr>
+    <tr><td class="tc">TC09</td><td>Hardware reset releases LOCK, returns to IDLE</td><td class="pass-tag">PASS</td><td class="pass-tag">✅ PASS</td></tr>
+    <tr><td class="tc">TC10</td><td>Overflow cmd 0x55 correctly triggers detection</td><td class="pass-tag">PASS</td><td class="pass-tag">✅ PASS</td></tr>
+    <tr><td class="tc">TC11</td><td>State stable after second reset</td><td class="pass-tag">PASS</td><td class="pass-tag">✅ PASS</td></tr>
+    <tr class="summary-row"><td colspan="2">Module subtotal</td><td colspan="2">Pass 11 / 11 · 100%</td></tr>
+  </table>
+</div>
+
+<!-- Module 2 -->
+<div class="section">
+  <div class="section-title">II. ro_puf_top — Ring Oscillator PUF</div>
+  <div class="desc">64-bit PUF based on ring oscillators. Outputs a device-unique physical fingerprint. Target Hamming weight: 32/64.</div>
+  <table>
+    <tr><th>ID</th><th>Test Item</th><th>Expected</th><th>Result</th></tr>
+    <tr><td class="tc">TC01</td><td>Reset: valid=0, response=0</td><td class="pass-tag">PASS</td><td class="pass-tag">✅ PASS</td></tr>
+    <tr><td class="tc">TC02</td><td>valid stays 0 without enable</td><td class="pass-tag">PASS</td><td class="pass-tag">✅ PASS</td></tr>
+    <tr><td class="tc">TC03</td><td>Sampling complete after enable, valid=1</td><td class="pass-tag">PASS</td><td class="pass-tag">✅ PASS</td></tr>
+    <tr><td class="tc">TC04</td><td>PUF output non-zero (valid fingerprint)</td><td class="pass-tag">PASS</td><td class="pass-tag">✅ PASS</td></tr>
+    <tr><td class="tc">TC05</td><td>PUF output not all-1s (no degeneration)</td><td class="pass-tag">PASS</td><td class="pass-tag">✅ PASS</td></tr>
+    <tr><td class="tc">TC06</td><td>Hamming weight within range 16–48</td><td class="pass-tag">PASS</td><td class="pass-tag">✅ PASS</td></tr>
+    <tr><td class="tc">TC07</td><td>Output stable across multiple cycles, no drift</td><td class="pass-tag">PASS</td><td class="pass-tag">✅ PASS</td></tr>
+    <tr><td class="tc">TC08</td><td>enable=0 clears valid</td><td class="pass-tag">PASS</td><td class="pass-tag">✅ PASS</td></tr>
+    <tr><td class="tc">TC09</td><td>Re-enable triggers new sampling successfully</td><td class="pass-tag">PASS</td><td class="pass-tag">✅ PASS</td></tr>
+    <tr><td class="tc">TC10</td><td>Second sampling output non-zero (valid)</td><td class="pass-tag">PASS</td><td class="pass-tag">✅ PASS</td></tr>
+    <tr><td class="tc">TC11</td><td>Reset clears valid and response</td><td class="pass-tag">PASS</td><td class="pass-tag">✅ PASS</td></tr>
+    <tr class="summary-row"><td colspan="2">Module subtotal</td><td colspan="2">Pass 11 / 11 · 100%</td></tr>
+  </table>
+</div>
+
+<!-- Module 3 -->
+<div class="section">
+  <div class="section-title">III. bio_hash_top — Biometric Hash Engine</div>
+  <div class="desc">ARX-structure hash engine. Inputs: 64-bit PUF data + 64-bit biometric data. Outputs: 128-bit identity token + 64-bit audit XOR.</div>
+  <table>
+    <tr><th>ID</th><th>Test Item</th><th>Expected</th><th>Result</th></tr>
+    <tr><td class="tc">TC01</td><td>Reset: valid=0, token=0</td><td class="pass-tag">PASS</td><td class="pass-tag">✅ PASS</td></tr>
+    <tr><td class="tc">TC02</td><td>No output without start trigger</td><td class="pass-tag">PASS</td><td class="pass-tag">✅ PASS</td></tr>
+    <tr><td class="tc">TC03</td><td>Standard input completes computation, valid=1</td><td class="pass-tag">PASS</td><td class="pass-tag">✅ PASS</td></tr>
+    <tr><td class="tc">TC04</td><td>Token output non-zero</td><td class="pass-tag">PASS</td><td class="pass-tag">✅ PASS</td></tr>
+    <tr><td class="tc">TC05</td><td>Token not all-1s (no degeneration)</td><td class="pass-tag">PASS</td><td class="pass-tag">✅ PASS</td></tr>
+    <tr><td class="tc">TC06</td><td>phys_xor non-zero</td><td class="pass-tag">PASS</td><td class="pass-tag">✅ PASS</td></tr>
+    <tr><td class="tc">TC07</td><td>start=0 clears valid</td><td class="pass-tag">PASS</td><td class="pass-tag">✅ PASS</td></tr>
+    <tr><td class="tc">TC08</td><td>Same input produces same token (deterministic)</td><td class="pass-tag">PASS</td><td class="pass-tag">✅ PASS</td></tr>
+    <tr><td class="tc">TC09</td><td>Different inputs produce different tokens (avalanche)</td><td class="pass-tag">PASS</td><td class="pass-tag">✅ PASS</td></tr>
+    <tr><td class="tc">TC10</td><td>phys_xor changes with different inputs</td><td class="pass-tag">PASS</td><td class="pass-tag">✅ PASS</td></tr>
+    <tr><td class="tc">TC11</td><td>All-zero input still yields valid token (RC perturbation)</td><td class="pass-tag">PASS</td><td class="pass-tag">✅ PASS</td></tr>
+    <tr><td class="tc">TC12</td><td>Reset clears valid and token</td><td class="pass-tag">PASS</td><td class="pass-tag">✅ PASS</td></tr>
+    <tr class="summary-row"><td colspan="2">Module subtotal</td><td colspan="2">Pass 12 / 12 · 100%</td></tr>
+  </table>
+</div>
+
+<!-- Module 4 -->
+<div class="section">
+  <div class="section-title">IV. security_soc_top — Top-Level SoC Integration</div>
+  <div class="desc">Full-chain integration: ro_puf_top → bio_hash_top → anomaly_fsm. Verifies cooperative operation, no race conditions, no deadlocks.</div>
+  <table>
+    <tr><th>ID</th><th>Test Item</th><th>Expected</th><th>Result</th></tr>
+    <tr><td class="tc">TC01</td><td>System reset: all four outputs cleared to 0</td><td class="pass-tag">PASS</td><td class="pass-tag">✅ PASS</td></tr>
+    <tr><td class="tc">TC02</td><td>Normal cmd: no alert, no lock</td><td class="pass-tag">PASS</td><td class="pass-tag">✅ PASS</td></tr>
+    <tr><td class="tc">TC03</td><td>PUF ready=1, fingerprint non-zero</td><td class="pass-tag">PASS</td><td class="pass-tag">✅ PASS</td></tr>
+    <tr><td class="tc">TC04</td><td>Hash done: token_valid=1, token non-zero</td><td class="pass-tag">PASS</td><td class="pass-tag">✅ PASS</td></tr>
+    <tr><td class="tc">TC05</td><td>Audit XOR differs from raw PUF fingerprint (mixed)</td><td class="pass-tag">PASS</td><td class="pass-tag">✅ PASS</td></tr>
+    <tr><td class="tc">TC06</td><td>Three illegal cmds trigger sys_alert=1</td><td class="pass-tag">PASS</td><td class="pass-tag">✅ PASS</td></tr>
+    <tr><td class="tc">TC07</td><td>Continuous illegal cmds trigger sys_lock=1</td><td class="pass-tag">PASS</td><td class="pass-tag">✅ PASS</td></tr>
+    <tr><td class="tc">TC08</td><td>PUF operates independently during LOCK</td><td class="pass-tag">PASS</td><td class="pass-tag">✅ PASS</td></tr>
+    <tr><td class="tc">TC09</td><td>Hash module state independent during LOCK</td><td class="pass-tag">PASS</td><td class="pass-tag">✅ PASS</td></tr>
+    <tr><td class="tc">TC10</td><td>Hardware reset clears full system lock</td><td class="pass-tag">PASS</td><td class="pass-tag">✅ PASS</td></tr>
+    <tr><td class="tc">TC11</td><td>Full chain restarts successfully after reset</td><td class="pass-tag">PASS</td><td class="pass-tag">✅ PASS</td></tr>
+    <tr><td class="tc">TC12</td><td>No spurious alert during normal operation</td><td class="pass-tag">PASS</td><td class="pass-tag">✅ PASS</td></tr>
+    <tr class="summary-row"><td colspan="2">Module subtotal</td><td colspan="2">Pass 12 / 12 · 100%</td></tr>
+  </table>
+</div>
+
+<!-- Stats -->
+<div class="section">
+  <div class="section-title">V. Aggregate Statistics</div>
+  <div style="background:var(--card);border:1px solid var(--border);border-top:none;padding:12px;">
+  <div class="stats-grid">
+    <div class="stat-card"><div class="num">46</div><div class="label">Total Tests</div></div>
+    <div class="stat-card"><div class="num">46</div><div class="label">Passed</div></div>
+    <div class="stat-card"><div class="num zero">0</div><div class="label">Failed</div></div>
+    <div class="stat-card"><div class="num">100%</div><div class="label">Pass Rate</div></div>
+  </div>
+  <table class="agg-table">
+    <tr><th>Module</th><th>Tests</th><th>Pass</th><th>Pass Rate</th></tr>
+    <tr><td>anomaly_fsm</td><td>11</td><td class="pass-tag">11</td><td class="pass-tag">100%</td></tr>
+    <tr><td>ro_puf_top</td><td>11</td><td class="pass-tag">11</td><td class="pass-tag">100%</td></tr>
+    <tr><td>bio_hash_top</td><td>12</td><td class="pass-tag">12</td><td class="pass-tag">100%</td></tr>
+    <tr><td>security_soc_top</td><td>12</td><td class="pass-tag">12</td><td class="pass-tag">100%</td></tr>
+    <tr class="summary-row"><td>Total</td><td>46</td><td>46</td><td>100%</td></tr>
+  </table>
+  </div>
+</div>
+
+<!-- Coverage -->
+<div class="section">
+  <div class="section-title">VI. Coverage Metrics</div>
+  <table style="border:1px solid var(--border);">
+    <tr><th>Metric</th><th>Target</th><th>Status</th></tr>
+    <tr><td>Code Coverage</td><td style="font-family:var(--mono);color:var(--muted);">≥ 95%</td><td class="pass-tag">✅ Met</td></tr>
+    <tr><td>Branch Coverage</td><td style="font-family:var(--mono);color:var(--muted);">≥ 90%</td><td class="pass-tag">✅ Met</td></tr>
+    <tr><td>Test Pass Rate</td><td style="font-family:var(--mono);color:var(--muted);">100%</td><td class="pass-tag">✅ 100%</td></tr>
+  </table>
+</div>
+
+<!-- Conclusion -->
+<div class="conclusion">
+  <div class="title">▶ CONCLUSION</div>
+  <p>
+    All 46 test cases passed with a 100% pass rate.<br>
+    RTL functional verification of all four modules is complete.<br>
+    SiliconForge Security SoC V3.0 satisfies tapeout criteria.<br>
+    Ready to proceed with ChipFoundry CI2609.
+  </p>
+</div>
+
+<div id="report-text" style="display:none">SiliconForge Security SoC V3.0 — Simulation Functional Verification Report
+============================================================
+Project  : SiliconForge Security SoC V3.0
+License  : Apache-2.0
+Simulator: EDA Playground / Icarus Verilog -g2012
+Waveform : EPWave
+Date     : 2026-03-30
+Engineer : Maomao
+
+------------------------------------------------------------
+I. anomaly_fsm — Anomaly Detection FSM
+Description: 6-state security FSM. Intercepts illegal commands in real time
+(ILLEGAL_CMD=0xFF, PRIV_CMD=0xAA, OVERFLOW=0x55). Hardware reset to exit LOCK.
+TC01 - Reset: alert=0, lock=0, state=IDLE ................. PASS
+TC02 - Normal cmd (0x10/0x20) triggers no alert ........... PASS
+TC03 - cmd_valid low returns FSM to IDLE .................. PASS
+TC04 - Illegal cmd 0xFF triggers DETECT state ............. PASS
+TC05 - >=2 illegal cmds accumulated, alert=1 .............. PASS
+TC06 - Privileged cmd 0xAA triggers DETECT ................ PASS
+TC07 - >=5 anomalies accumulated, LOCK entered, lock=1 .... PASS
+TC08 - Commands during LOCK maintain lock state ........... PASS
+TC09 - Hardware reset releases LOCK, returns to IDLE ...... PASS
+TC10 - Overflow cmd 0x55 correctly triggers detection ..... PASS
+TC11 - State stable after second reset .................... PASS
+Module subtotal: Pass 11 / 11 · 100%
+
+------------------------------------------------------------
+II. ro_puf_top — Ring Oscillator PUF
+Description: 64-bit PUF based on ring oscillators. Device-unique physical
+fingerprint output. Target Hamming weight: 32/64.
+TC01 - Reset: valid=0, response=0 ......................... PASS
+TC02 - valid stays 0 without enable ....................... PASS
+TC03 - Sampling complete after enable, valid=1 ............ PASS
+TC04 - PUF output non-zero (valid fingerprint) ............ PASS
+TC05 - PUF output not all-1s (no degeneration) ............ PASS
+TC06 - Hamming weight within range 16-48 .................. PASS
+TC07 - Output stable across multiple cycles, no drift ..... PASS
+TC08 - enable=0 clears valid .............................. PASS
+TC09 - Re-enable triggers new sampling successfully ....... PASS
+TC10 - Second sampling output non-zero (valid) ............ PASS
+TC11 - Reset clears valid and response .................... PASS
+Module subtotal: Pass 11 / 11 · 100%
+
+------------------------------------------------------------
+III. bio_hash_top — Biometric Hash Engine
+Description: ARX-structure hash engine. Inputs: 64-bit PUF + 64-bit biometric.
+Outputs: 128-bit identity token + 64-bit audit XOR.
+TC01 - Reset: valid=0, token=0 ............................ PASS
+TC02 - No output without start trigger .................... PASS
+TC03 - Standard input completes computation, valid=1 ...... PASS
+TC04 - Token output non-zero .............................. PASS
+TC05 - Token not all-1s (no degeneration) ................. PASS
+TC06 - phys_xor non-zero .................................. PASS
+TC07 - start=0 clears valid ............................... PASS
+TC08 - Same input produces same token (deterministic) ..... PASS
+TC09 - Different inputs produce different tokens (avalanche) PASS
+TC10 - phys_xor changes with different inputs ............. PASS
+TC11 - All-zero input still yields valid token (RC perturb) PASS
+TC12 - Reset clears valid and token ....................... PASS
+Module subtotal: Pass 12 / 12 · 100%
+
+------------------------------------------------------------
+IV. security_soc_top — Top-Level SoC Integration
+Description: Full-chain integration: ro_puf_top -> bio_hash_top -> anomaly_fsm.
+Verifies cooperative operation, no race conditions, no deadlocks.
+TC01 - System reset: all four outputs cleared to 0 ........ PASS
+TC02 - Normal cmd: no alert, no lock ...................... PASS
+TC03 - PUF ready=1, fingerprint non-zero .................. PASS
+TC04 - Hash done: token_valid=1, token non-zero ........... PASS
+TC05 - Audit XOR differs from raw PUF fingerprint ......... PASS
+TC06 - Three illegal cmds trigger sys_alert=1 ............. PASS
+TC07 - Continuous illegal cmds trigger sys_lock=1 ......... PASS
+TC08 - PUF operates independently during LOCK ............. PASS
+TC09 - Hash module state independent during LOCK .......... PASS
+TC10 - Hardware reset clears full system lock ............. PASS
+TC11 - Full chain restarts successfully after reset ....... PASS
+TC12 - No spurious alert during normal operation .......... PASS
+Module subtotal: Pass 12 / 12 · 100%
+
+============================================================
+AGGREGATE STATISTICS
+Module              Tests  Pass  Pass Rate
+anomaly_fsm          11     11    100%
+ro_puf_top           11     11    100%
+bio_hash_top         12     12    100%
+security_soc_top     12     12    100%
+Total                46     46    100%
+
+COVERAGE METRICS
+Code Coverage  : >= 95%   MET
+Branch Coverage: >= 90%   MET
+Test Pass Rate : 100%     100%
+
+CONCLUSION:
+All 46 test cases passed with a 100% pass rate.
+RTL functional verification of all four modules is complete.
+SiliconForge Security SoC V3.0 satisfies tapeout criteria.
+Ready to proceed with ChipFoundry CI2609.
+============================================================</div>
+
+<script>
+function copyReport(btn) {
+  const text = document.getElementById('report-text').innerText;
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = '✅ Copied to clipboard!';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = '📋 Copy Full Report to Clipboard';
+      btn.classList.remove('copied');
+    }, 2500);
+  }).catch(() => {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    btn.textContent = '✅ Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = '📋 Copy Full Report to Clipboard';
+      btn.classList.remove('copied');
+    }, 2500);
+  });
+}
+</script>
+</body>
+</html>
